@@ -4,13 +4,104 @@
 
 
 char AddStudent();
+char CheckAttendance();
 
 int main(){
-  AddStudent();
+  // AddStudent();
+  CheckAttendance();
+}
+
+char CheckAttendance(){
+  FILE *std; //Student Data
+  FILE *atd; //Attendance Data
+
+  int rno;
+  printf("Enter Registration Number:");
+  scanf("%d",&rno);
+
+  std = fopen("./data/student-data.csv","r");
+  atd = fopen("./data/attendance-data.csv","r");
+  
+  if(!std || !atd){
+    printf("Can't access the file.");
+  }
+  else{
+    char buffer[1024];
+    long int attendance[7],classConducted[7];
+    int row=0,column=0;
+    while (fgets(buffer,1024,atd))
+    {
+      char* value = strtok(buffer,",");
+      column=0;
+      if(row!=0){
+        long int temp = strtoul(value,NULL,10);
+
+        if(temp==rno){
+          while (value){ //Store value of the no of hours attended in an array
+              if(column==1){
+                attendance[0]=strtoul(value,NULL,10);
+                }
+              if(column==2){
+                attendance[1]=strtoul(value,NULL,10);
+                }
+              if(column==3){
+                attendance[2]=strtoul(value,NULL,10);
+                }
+              if(column==4){
+                attendance[3]=strtoul(value,NULL,10);
+                }
+              if(column==5){
+                attendance[4]=strtoul(value,NULL,10);
+                }
+              if(column==6){
+                attendance[5]=strtoul(value,NULL,10);
+                }
+              if(column==7){
+                attendance[6]=strtoul(value,NULL,10);
+                }
+            
+            column++;
+            value = strtok(NULL, ",");
+          }
+        }
+      }
+      else{
+        while(value){
+          if(column == 2){
+              classConducted[0]=strtoul(value,NULL,10);
+              }
+          if(column == 3){
+            classConducted[1]=strtoul(value,NULL,10);
+            }
+          if(column == 4){
+            classConducted[2]=strtoul(value,NULL,10);
+            }
+          if(column == 5){
+            classConducted[3]=strtoul(value,NULL,10);
+            }
+          if(column == 6){
+            classConducted[4]=strtoul(value,NULL,10);
+            }
+          if(column == 7){
+            classConducted[5]=strtoul(value,NULL,10);
+            }
+          if(column == 8){
+            classConducted[6]=strtoul(value,NULL,10);
+            }  
+          column++;
+          value = strtok(NULL, ",");
+          continue;
+        }
+      }
+      row++;
+    }
+    printf("%ld\n",attendance[0]);
+    
+  }
 }
 
 char AddStudent(){
-  FILE *std;
+  FILE *std; //Student Data
   char name[20];
   int rno;
   std = fopen("./data/student-data.csv","a+");
@@ -33,7 +124,7 @@ char AddStudent(){
       }
       char* value = strtok(buffer,",");
       while (value){
-        int temp = atoi(value);
+        long int temp = strtoul(value,NULL,10);
         if(temp==rno){
           return printf("Student already exists!\n");
         }
