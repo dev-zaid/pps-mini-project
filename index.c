@@ -67,25 +67,25 @@ char CheckAttendance(){
       }
       else{
         while(value){
-          if(column == 2){
+          if(column == 1){
               classConducted[0]=strtoul(value,NULL,10);
               }
-          if(column == 3){
+          if(column == 2){
             classConducted[1]=strtoul(value,NULL,10);
             }
-          if(column == 4){
+          if(column == 3){
             classConducted[2]=strtoul(value,NULL,10);
             }
-          if(column == 5){
+          if(column == 4){
             classConducted[3]=strtoul(value,NULL,10);
             }
-          if(column == 6){
+          if(column == 5){
             classConducted[4]=strtoul(value,NULL,10);
             }
-          if(column == 7){
+          if(column == 6){
             classConducted[5]=strtoul(value,NULL,10);
             }
-          if(column == 8){
+          if(column == 7){
             classConducted[6]=strtoul(value,NULL,10);
             }  
           column++;
@@ -95,8 +95,11 @@ char CheckAttendance(){
       }
       row++;
     }
-    printf("%ld\n",attendance[0]);
-    
+    for(int i=0;i<7;i++){
+      float att; 
+      att=attendance[i]*100/classConducted[i];
+      printf("Subject %d : %.2f %%\n",i+1,att);
+    }
   }
 }
 
