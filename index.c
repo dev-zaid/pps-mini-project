@@ -9,7 +9,7 @@ char* getUser(long int regno);
 
 struct subject
 {
-  char* name;
+  char name[20];
   long int hoursConducted;
 };
 
@@ -79,7 +79,10 @@ char CheckAttendance(){
 
     currentUser.name = getUser(rno);
     currentUser.rno = rno;
-    printf("\n%s\n",currentUser.name);
+
+    if(getUser == NULL){
+      exit(0);
+    }
 
     int row=0,column=0;
     while (fgets(buffer,1024,atd))
@@ -89,31 +92,34 @@ char CheckAttendance(){
       if(row==0){
         while(value){
           if(column == 1){
-            sub[0].name=value;
+            strcpy(sub[0].name,value);
           }
-          if(column == 2){
-            sub[1].name=value;
+          else if(column == 2){
+            strcpy(sub[1].name,value);
           }
-          if(column == 3){
-            sub[2].name=value;
+          else if(column == 3){
+            strcpy(sub[2].name,value);
           }
-          if(column == 4){
-            sub[3].name=value;
+          else if(column == 4){
+            strcpy(sub[3].name,value);
           }
-          if(column == 5){
-            sub[4].name=value;
+          else if(column == 5){
+            strcpy(sub[4].name,value);
           }
-          if(column == 6){
-            sub[5].name=value;
+          else if(column == 6){
+            strcpy(sub[5].name,value);
           }
-          if(column == 7){
-            sub[6].name=value;
+          else if(column == 7){
+            strcpy(sub[6].name,value);
           }
+
           column++;
           value = strtok(NULL, ",");
           continue;
         }
+
       }
+
       else if(row==1){
         while(value){
           if(column == 1){
@@ -143,8 +149,6 @@ char CheckAttendance(){
         }
       }
       
-      
-
       else{
         long int temp = strtoul(value,NULL,10);
         if(temp==rno){
@@ -178,12 +182,12 @@ char CheckAttendance(){
       }      
       row++;
     }
-    
+    printf("\nName: %s",currentUser.name);
+    printf("\nRegistration No.: %ld\n",currentUser.rno);
     for(int i=0;i<7;i++){
       float att;
       att=currentUser.att[i]*100/sub[i].hoursConducted;
-      printf("%s\n",sub[i].name);
-      //printf("%s : %.2f %%\n",sub[i].name,att);
+      printf("\n%s : %.2f %%",sub[i].name,att);
     }
   }
 }
