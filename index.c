@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+void menu();
 char AddStudent();
 char CheckAttendance();
 char* getUser(long int regno);
@@ -21,9 +21,43 @@ struct user
 };
 
 int main(){
-  // AddStudent();
-  CheckAttendance();
+  menu();
 }
+
+void menu()
+{
+  int choice;
+  long int regno;
+
+  system("cls");
+  printf("\t\t\t  MENU\t\t\n\n");
+  printf("\t1.Add New Student   \t2.Check Attendance \t3.Search Student \n\t4.Exit\n\n");
+  scanf("%d",&choice);
+  switch(choice)
+  {
+      case 1:
+        AddStudent();
+        break;
+      case 2: 
+        CheckAttendance();
+        break;
+      case 3:  
+        printf("\nEnter Registration Number:");
+        scanf("%ld",&regno);
+        getUser(regno);
+        break;
+      case 4: 
+        exit(0);
+        break;
+      break;
+      default:
+                  system("cls");
+                  printf("\nEnter 1 to 4 only");
+                  exit(0);
+    menu();
+  }
+}
+
 char* getUser(long int regno){
   FILE *std; //Student Data
   std = fopen("./data/student-data.csv","r");
@@ -45,6 +79,7 @@ char* getUser(long int regno){
       if(regno==temp){
         while (value){
         if(column == 1){
+          printf("\nName: %s\nRegistration No.: %ld\n\n",value,regno);
           return value;
         }
         column++;
@@ -58,13 +93,15 @@ char* getUser(long int regno){
   }
 }
 
+
 char CheckAttendance(){
   FILE *std; //Student Data
   FILE *atd; //Attendance Data
+  struct user currentUser;
 
-  int rno;
-  printf("Enter Registration Number:");
-  scanf("%d",&rno);
+  long int rno;
+  printf("\nEnter Registration Number:");
+  scanf("%ld",&rno);
   
   std = fopen("./data/student-data.csv","r");
   atd = fopen("./data/attendance-data.csv","r");
@@ -73,17 +110,13 @@ char CheckAttendance(){
     printf("Can't access the file.");
   }
   else{
-    struct user currentUser;
     char buffer[1024];
     struct subject sub[7];
-
     currentUser.name = getUser(rno);
     currentUser.rno = rno;
-
-    if(getUser == NULL){
+    if(currentUser.name == NULL){
       exit(0);
     }
-
     int row=0,column=0;
     while (fgets(buffer,1024,atd))
     {
@@ -182,50 +215,36 @@ char CheckAttendance(){
       }      
       row++;
     }
-    printf("\nName: %s",currentUser.name);
-    printf("\nRegistration No.: %ld\n",currentUser.rno);
     for(int i=0;i<7;i++){
       float att;
       att=currentUser.att[i]*100/sub[i].hoursConducted;
-      printf("\n%s : %.2f %%",sub[i].name,att);
+      printf("%s : %.2f %%\n",sub[i].name,att);
     }
   }
 }
 
 char AddStudent(){
   FILE *std; //Student Data
+  FILE *atd; //Attendance Data
   char name[20];
-  int rno;
+  long int rno;
   std = fopen("./data/student-data.csv","a+");
+  atd = fopen("./data/attendance-data.csv","a+");
   printf("Enter Student Name:");
   scanf("%s",name);
   printf("Enter Registration Number:");
-  scanf("%d",&rno);
-  if (!std){
+  scanf("%ld",&rno);
+  if (!std || !atd){
     printf("Can't open file!\n");
   }
   else{
     char buffer[1024];
     int row=0,column=0;
-    while (fgets(buffer,1024,std))
-    {
-      column=0;
-      row++;
-      if (row==0){
-        continue;
-      }
-      char* value = strtok(buffer,",");
-      while (value){
-        long int temp = strtoul(value,NULL,10);
-        if(temp==rno){
-          return printf("Student already exists!\n");
-        }
-        column++;
-        value = strtok(NULL, ",");
-        continue;
-      }
+    if(getUser(rno)!=NULL){
+      return printf("User already exixts!\n");
     }
-    fprintf(std,"%s,%d\n",name,rno);
+    fprintf(std,"%ld,%s\n",rno,name);
+    fprintf(atd,"\n%ld,%d,%d,%d,%d,%d,%d,%d",rno,0,0,0,0,0,0,0);
     return printf("Student added\n");
     fclose(std);
   }
