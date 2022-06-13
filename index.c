@@ -29,7 +29,7 @@ void menu()
   int choice;
   long int regno;
 
-  system("cls");
+  system("clear");
   printf("\t\t\t  MENU\t\t\n\n");
   printf("\t1.Add New Student   \t2.Check Attendance \t3.Search Student \n\t4.Exit\n\n");
   scanf("%d",&choice);
@@ -47,13 +47,14 @@ void menu()
         getUser(regno);
         break;
       case 4: 
+        system("clear");
         exit(0);
         break;
-      break;
       default:
-                  system("cls");
+                  system("clear");
                   printf("\nEnter 1 to 4 only");
                   exit(0);
+                  
     menu();
   }
 }
